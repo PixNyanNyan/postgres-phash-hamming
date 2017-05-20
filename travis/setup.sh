@@ -10,8 +10,7 @@ pg_version=$(ruby -r yaml \
 if [ -n "${pg_version}" ]; then
   sudo apt-get install -qq -y postgresql-server-dev-${pg_version}
 
-  git clone --quiet --recursive --depth 1 \
-    https://github.com/PixNyanNyan/postgres-phash-hamming.git
+  git clone https://github.com/PixNyanNyan/postgres-phash-hamming.git
   cd postgres-phash-hamming
   make
   sudo make install

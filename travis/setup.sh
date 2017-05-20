@@ -3,10 +3,6 @@
 # set -x
 set -e
 
-curl --silent --location --fail \
-  https://github.com/PixNyanNyan/postgres-phash-hamming/raw/master/travis/setup.sh | \
-  sh
-
 pg_version=$(ruby -r yaml \
   -e 'print((YAML.load(ARGF.read)["addons"] || {})["postgresql"])' \
   .travis.yml)

@@ -1,0 +1,18 @@
+# postgres-phash-hamming
+--------
+
+## What's this?
+
+It's a postgresql extension providing `ph_hamming_distance` function from pHash.org.
+
+## How to use?
+
+1. Clone the repo and make sure you have postgres-server-dev installed.
+
+2. Verify PG_CONFIG in Makefile has correct path to pg_config, then `make && make install` to install it.
+
+3. Log into the database, run `CREATE EXTENSION pg_phash;` to activate the extension.
+
+## License
+
+GPL 3.0 license as restricted by pHash.

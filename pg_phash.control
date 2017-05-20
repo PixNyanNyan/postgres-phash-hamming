@@ -1,0 +1,5 @@
+# pg_similarity extension
+comment = 'support phash hamming distance calculation'
+default_version = '1.0'
+module_pathname = '$libdir/pg_phash'
+relocatable = true

@@ -17,8 +17,8 @@ if [ -n "${pg_version}" ]; then
   git clone --quiet --recursive --depth 1 \
     https://github.com/PixNyanNyan/postgres-phash-hamming.git
   cd postgres-phash-hamming
-  make > /dev/null
-  sudo make install > /dev/null
+  make
+  sudo make install
   cd ..
 
   psql -U postgres -d template1 -c 'CREATE EXTENSION pg_phash;'

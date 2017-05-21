@@ -1,6 +1,7 @@
 #include <postgres.h>
 #include <fmgr.h>
 #include <string.h>
+#include <errno.h>
 #include <utils/datum.h>
 
 #if defined(_MSC_VER) || defined(__BORLANDC__)
@@ -13,7 +14,7 @@ typedef unsigned long long ulong64;
 PG_MODULE_MAGIC;
 #endif
 
-int ph_hamming_distance(const ulong64 hash1,const ulong64 hash2);
+int32 ph_hamming_distance(const ulong64 hash1,const ulong64 hash2);
 
 PG_FUNCTION_INFO_V1(phash_hamming);
 Datum phash_hamming(PG_FUNCTION_ARGS) {
@@ -21,8 +22,17 @@ Datum phash_hamming(PG_FUNCTION_ARGS) {
     VarChar *varchar1 = PG_GETARG_VARCHAR_P(0);
     VarChar *varchar2 = PG_GETARG_VARCHAR_P(1);
 
+    errno = 0;
+
     ulong64 long1 = strtoull(VARDATA(varchar1), NULL, 10);
+
+    if (errno != 0)
+        PG_RETURN_INT32(-1);
+
     ulong64 long2 = strtoull(VARDATA(varchar2), NULL, 10);
+
+    if (errno != 0)
+        PG_RETURN_INT32(-1);
 
     int32 ret = ph_hamming_distance(long1, long2);
 
@@ -51,7 +61,7 @@ Datum phash_hamming(PG_FUNCTION_ARGS) {
     D Grant Starkweather - dstarkweather@phash.org
 */
 
-int ph_hamming_distance(const ulong64 hash1,const ulong64 hash2){
+int32 ph_hamming_distance(const ulong64 hash1,const ulong64 hash2){
     ulong64 x = hash1^hash2;
     const ulong64 m1  = 0x5555555555555555ULL;
     const ulong64 m2  = 0x3333333333333333ULL;

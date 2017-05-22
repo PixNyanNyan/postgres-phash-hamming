@@ -19,7 +19,7 @@ int32 ph_hamming_distance(const ulong64 hash1, const ulong64 hash2);
 PG_FUNCTION_INFO_V1(phash_hamming);
 Datum phash_hamming(PG_FUNCTION_ARGS) {
     // Prevent null pointers, which will cause segfault
-    if (PG_GETARG_DATUM(0) == NULL || PG_GETARG_DATUM(1) == NULL) {
+    if (PG_GETARG_DATUM(0) == 0x00 || PG_GETARG_DATUM(1) == 0x00) {
         PG_RETURN_NULL();
     }
 
@@ -28,8 +28,8 @@ Datum phash_hamming(PG_FUNCTION_ARGS) {
     VarChar *ptr2 = PG_GETARG_VARCHAR_P(1);
 
     // Get varchar sizes
-    char size1 = VARSIZE(ptr1) - VARHDRSZ;
-    char size2 = VARSIZE(ptr2) - VARHDRSZ;
+    unsigned char size1 = VARSIZE(ptr1) - VARHDRSZ;
+    unsigned char size2 = VARSIZE(ptr2) - VARHDRSZ;
 
     // Extract content to new memory space
     char varchar1[size1 + 1];

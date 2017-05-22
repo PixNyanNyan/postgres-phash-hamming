@@ -16,7 +16,7 @@ It's a postgresql extension providing `ph_hamming_distance` function from pHash.
 
 The `phash_hamming` function accepts two base-10 number strings as parameters.
 
-Valid return value range is 0~255, and it returns 0x7FFFFFFF(INT_MAX) if null is supplied as input.
+Valid return value range is 0~255, and it returns null if null is supplied as input.
 
 For example, if you have two images and their hashes are '13121266429874464083' and '10869537466045227287'.
 
@@ -27,6 +27,18 @@ SELECT phash_hamming('13121266429874464083', '10869537466045227287');
 ---------------
             16
 (1 row)
+```
+
+## Testing
+
+We offer a script to be used in .travis.yml, see the code below.
+
+```
+sudo: required
+install:
+  - curl --silent --location https://github.com/PixNyanNyan/postgres-phash-hamming/raw/master/travis/setup.sh | sh
+addons:
+  postgresql: 9.6
 ```
 
 ## License

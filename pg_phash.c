@@ -19,7 +19,7 @@ PG_FUNCTION_INFO_V1(phash_hamming);
 Datum phash_hamming(PG_FUNCTION_ARGS) {
     // Prevent null values, memory address 0x00 will cause segfault
     if (PG_GETARG_DATUM(0) == 0x00 || PG_GETARG_DATUM(1) == 0x00) {
-        PG_RETURN_INT32(0x7FFFFFFF);
+        PG_RETURN_NULL();
     }
 
     VarChar *varchar1 = PG_GETARG_VARCHAR_P(0);

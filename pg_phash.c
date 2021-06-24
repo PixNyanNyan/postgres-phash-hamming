@@ -18,36 +18,46 @@ int32 ph_hamming_distance(const ulong64 hash1, const ulong64 hash2);
 
 PG_FUNCTION_INFO_V1(phash_hamming);
 Datum phash_hamming(PG_FUNCTION_ARGS) {
+    VarChar *ptr1;
+    VarChar *ptr2;
+    unsigned char size1;
+    unsigned char size2;
+    char *varchar1;
+    char *varchar2;
+    ulong64 long1;
+    ulong64 long2;
+    int32 distance;
+    
     // Prevent null pointers, which will cause segfault
     if (PG_GETARG_DATUM(0) == 0x00 || PG_GETARG_DATUM(1) == 0x00) {
         PG_RETURN_NULL();
     }
 
     // Get varchar pointers
-    VarChar *ptr1 = PG_GETARG_VARCHAR_P(0);
-    VarChar *ptr2 = PG_GETARG_VARCHAR_P(1);
+    ptr1 = PG_GETARG_VARCHAR_P(0);
+    ptr2 = PG_GETARG_VARCHAR_P(1);
 
     // Get varchar sizes
-    unsigned char size1 = VARSIZE(ptr1) - VARHDRSZ;
-    unsigned char size2 = VARSIZE(ptr2) - VARHDRSZ;
+    size1 = VARSIZE(ptr1) - VARHDRSZ;
+    size2 = VARSIZE(ptr2) - VARHDRSZ;
 
     // Extract content to new memory space
-    char varchar1[size1 + 1];
+    varchar1 = malloc (sizeof (char) * size1);
     memcpy(varchar1, (void*) VARDATA(ptr1), size1);
     varchar1[size1] = '\0';
 
-    char varchar2[size2 + 1];
+    varchar2 = malloc (sizeof (char) * size2);
     memcpy(varchar2, (void*) VARDATA(ptr2), size2);
     varchar2[size2] = '\0';
 
     // Convert number strings to ulong64
-    ulong64 long1 = strtoull(varchar1, NULL, 10);
-    ulong64 long2 = strtoull(varchar2, NULL, 10);
+    long1 = strtoull(varchar1, NULL, 10);
+    long2 = strtoull(varchar2, NULL, 10);
 
     // Compute hamming distance
-    int32 ret = ph_hamming_distance(long1, long2);
+    distance = ph_hamming_distance(long1, long2);
 
-    PG_RETURN_INT32(ret);
+    PG_RETURN_INT32(distance);
 }
 
 /*
@@ -73,11 +83,12 @@ Datum phash_hamming(PG_FUNCTION_ARGS) {
 */
 
 int32 ph_hamming_distance(const ulong64 hash1, const ulong64 hash2){
-    ulong64 x = hash1^hash2;
     const ulong64 m1  = 0x5555555555555555ULL;
     const ulong64 m2  = 0x3333333333333333ULL;
     const ulong64 h01 = 0x0101010101010101ULL;
     const ulong64 m4  = 0x0f0f0f0f0f0f0f0fULL;
+    
+    ulong64 x = hash1 ^ hash2;
     x -= (x >> 1) & m1;
     x = (x & m2) + ((x >> 2) & m2);
     x = (x + (x >> 4)) & m4;

@@ -42,11 +42,11 @@ Datum phash_hamming(PG_FUNCTION_ARGS) {
     size2 = VARSIZE(ptr2) - VARHDRSZ;
 
     // Extract content to new memory space
-    varchar1 = malloc(sizeof (char) * size1);
+    varchar1 = malloc(sizeof (char) * (size1 + 1));
     memcpy(varchar1, (void*) VARDATA(ptr1), size1);
     varchar1[size1] = '\0';
 
-    varchar2 = malloc(sizeof (char) * size2);
+    varchar2 = malloc(sizeof (char) * (size2 + 1));
     memcpy(varchar2, (void*) VARDATA(ptr2), size2);
     varchar2[size2] = '\0';
 
